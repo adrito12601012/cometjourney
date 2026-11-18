@@ -1,0 +1,870 @@
+<title>The Journey of Comet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* Layout concept: one long night sky. A comet follows the reader down the page, a route map and a side rail track the journey, and the Earthlings section is a tabbed deck. */
+:root {
+  --night: #080c1c;
+  --night-2: #0f1530;
+  --panel: rgba(18, 25, 55, 0.66);
+  --panel-solid: #121937;
+  --line: rgba(160, 185, 255, 0.16);
+  --ice: #eaf1ff;
+  --mute: #a9b5d8;
+  --ember: #ff7a3d;
+  --gold: #ffc46b;
+  --aur-g: #52f2b3;
+  --aur-p: #b78cff;
+  --aur-k: #ff80d5;
+  --f-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "Space Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--night);
+  color: var(--ice);
+  font: 17px/1.7 var(--f-body);
+  overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 60; background: var(--night);
+}
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+main, header, footer { position: relative; z-index: 1; }
+.wrap {
+  width: 100%; max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--gold); }
+:focus-visible { outline: 2px solid var(--aur-g); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3, h4 { font-family: var(--f-display); line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+.eyebrow { font: 700 12px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+
+/* Header */
+header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  background: rgba(8, 12, 28, 0.78); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 62px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ice); font: 800 19px/1 var(--f-display); white-space: nowrap; }
+.brand svg { width: 30px; height: 30px; flex: none; }
+.menu-btn { display: none; background: none; border: 1px solid var(--line); color: var(--ice); border-radius: 10px; padding: 9px 13px; font: 700 13px var(--f-mono); cursor: pointer; }
+nav.main ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; align-items: center; }
+nav.main a, nav.main button.sub-btn {
+  display: block; padding: 9px 13px; border-radius: 999px; text-decoration: none; color: var(--mute);
+  font: 500 15px/1 var(--f-body); background: none; border: 0; cursor: pointer; white-space: nowrap;
+  transition: color .2s, background .2s;
+}
+nav.main a:hover, nav.main button.sub-btn:hover, nav.main a.active, nav.main .has-sub.active > button { color: var(--ice); background: rgba(255, 196, 107, 0.12); }
+nav.main a.active, nav.main .has-sub.active > button { box-shadow: inset 0 0 0 1px rgba(255, 196, 107, 0.4); }
+.has-sub { position: relative; }
+.sub {
+  position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px; padding: 8px; display: none !important;
+  flex-direction: column; align-items: stretch !important; gap: 2px !important;
+  background: var(--panel-solid); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 18px 40px rgba(0,0,0,.45);
+}
+.has-sub:hover .sub, .has-sub:focus-within .sub, .has-sub.open .sub { display: flex !important; }
+.sub a { border-radius: 9px; }
+
+/* Hero */
+.hero { padding-block: clamp(72px, 14vh, 150px) 40px; }
+.hero h1 { font-size: clamp(38px, 7.4vw, 92px); font-weight: 800; max-width: 17ch; }
+.hero h1 em { font-style: normal; background: linear-gradient(100deg, var(--gold), var(--ember) 55%, #ff4f6a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero .ask { margin-top: 26px; font-size: clamp(19px, 2.4vw, 26px); color: var(--mute); max-width: 36ch; }
+.go {
+  display: inline-flex; align-items: center; gap: 12px; margin-top: 34px; padding: 16px 26px; border-radius: 999px; text-decoration: none;
+  font: 800 18px/1 var(--f-display); color: #1b0d05; background: linear-gradient(100deg, var(--gold), var(--ember));
+  box-shadow: 0 0 0 0 rgba(255, 122, 61, .6); animation: pulse 2.6s ease-out infinite; transition: transform .2s;
+}
+.go:hover { transform: translateY(-3px) scale(1.03); }
+.go svg { width: 20px; height: 20px; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,122,61,.55); } 70%, 100% { box-shadow: 0 0 0 22px rgba(255,122,61,0); } }
+
+/* Map */
+.map { padding-block: 40px 70px; }
+.map h2 { font-size: clamp(22px, 3vw, 32px); margin-bottom: 18px; }
+.map-card { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: clamp(10px, 2vw, 22px); overflow: hidden; }
+.map svg { display: block; width: 100%; height: auto; }
+.route-base { fill: none; stroke: rgba(160,185,255,.22); stroke-width: 3; stroke-dasharray: 3 12; stroke-linecap: round; }
+.route-lit { fill: none; stroke: url(#routeGrad); stroke-width: 5; stroke-linecap: round; }
+.stop { cursor: pointer; }
+.stop circle.dot { fill: var(--night-2); stroke: rgba(160,185,255,.5); stroke-width: 3; transition: all .3s; }
+.stop text { fill: var(--mute); font: 700 27px var(--f-body); transition: fill .3s; }
+.stop.lit circle.dot { fill: var(--gold); stroke: var(--ember); }
+.stop.lit text, .stop:hover text { fill: var(--ice); }
+.stop:focus-visible { outline: none; }
+.stop:focus-visible circle.dot { stroke: var(--aur-g); }
+
+/* Section scaffolding */
+section { scroll-margin-top: 76px; }
+.sec { padding-block: clamp(64px, 10vw, 120px); }
+.sec-head { display: flex; flex-direction: column; gap: 14px; margin-bottom: 34px; }
+.sec-head h2 { font-size: clamp(34px, 5.6vw, 66px); font-weight: 800; }
+.lede { font-size: clamp(18px, 1.7vw, 21px); color: #d3dcf5; max-width: 68ch; }
+.split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(22px, 4vw, 56px); align-items: start; }
+.split > * { min-width: 0; }
+.story { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: clamp(22px, 3vw, 36px); }
+.story h3 { font-size: clamp(24px, 3vw, 34px); margin-bottom: 14px; }
+.story p { color: #d3dcf5; max-width: 62ch; }
+.qs { margin-top: 38px; }
+.qs-title { font: 700 13px/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--aur-g); display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.qs-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
+.qs-lead { font-size: clamp(18px, 1.8vw, 21px); color: var(--ice); max-width: 70ch; margin-bottom: 22px; }
+.bits { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+.bits li {
+  position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 18px 54px; color: #cdd7f2; font-size: 16px; line-height: 1.6;
+  transition: transform .25s, border-color .25s, background .25s;
+}
+.bits li::before {
+  content: ""; position: absolute; left: 18px; top: 22px; width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff, var(--gold) 40%, var(--ember) 75%); box-shadow: 0 0 14px rgba(255,160,80,.7);
+}
+.bits li:hover { transform: translateY(-5px) rotate(-.4deg); border-color: rgba(255, 196, 107, .55); background: rgba(28, 37, 78, .8); }
+.bits b { display: block; color: var(--ice); font: 700 17px/1.3 var(--f-display); margin-bottom: 4px; }
+
+/* Video slots */
+.video { margin: 0; }
+.vframe {
+  position: relative; aspect-ratio: 2 / 3; width: 100%; max-width: 380px; margin-inline: auto; border-radius: 20px; overflow: hidden; display: grid; place-items: center; text-align: center; padding: 18px;
+  background: radial-gradient(120% 90% at 20% 10%, rgba(255,122,61,.28), transparent 55%), radial-gradient(100% 80% at 90% 100%, rgba(183,140,255,.3), transparent 60%), var(--night-2);
+  border: 1px solid var(--line);
+}
+.vframe video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; object-fit: cover; }
+.vplay { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--gold), var(--ember)); color: #1b0d05; margin: 0 auto 12px; box-shadow: 0 0 36px rgba(255,122,61,.55); }
+.vplay svg { width: 26px; height: 26px; margin-left: 3px; }
+.vname { font: 400 12px/1.5 var(--f-mono); color: var(--mute); overflow-wrap: anywhere; max-width: 36ch; margin: 0 auto; }
+.vmsg { font: 400 13px/1.5 var(--f-body); color: var(--gold); margin-top: 8px; }
+.vtools { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
+.vbtn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ice);
+  font: 500 14px/1 var(--f-body); cursor: pointer; text-decoration: none; transition: border-color .2s, background .2s;
+}
+.vbtn:hover { border-color: var(--gold); background: rgba(255,196,107,.1); }
+.vbtn input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.vbtn:focus-within { outline: 2px solid var(--aur-g); outline-offset: 3px; }
+
+/* Aurora */
+.aurora { position: relative; overflow: hidden; border-block: 1px solid var(--line); }
+#aurora-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .85; pointer-events: none; }
+.aurora::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--night) 0%, transparent 18%, transparent 78%, var(--night) 100%); pointer-events: none; }
+.aurora .wrap { position: relative; z-index: 2; }
+.aurora .sec-head h2 { background: linear-gradient(95deg, var(--aur-g), var(--aur-p) 55%, var(--aur-k)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.aurora .bits li::before { background: radial-gradient(circle at 35% 35%, #fff, var(--aur-g) 45%, var(--aur-p) 85%); box-shadow: 0 0 14px rgba(82,242,179,.65); }
+.aurora .bits li:hover { border-color: rgba(82, 242, 179, .6); }
+.aurora .story, .aurora .bits li { backdrop-filter: blur(6px); }
+
+/* Earthlings */
+.tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-bottom: 26px; }
+.tab {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 16px; text-align: left; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 18px; color: var(--ice); font: 700 16px/1.2 var(--f-display);
+  transition: transform .25s, border-color .25s, background .25s;
+}
+.tab svg { width: 34px; height: 34px; color: var(--mute); transition: color .25s, transform .35s; }
+.tab:hover { transform: translateY(-4px); }
+.tab:hover svg { transform: rotate(-8deg) scale(1.1); }
+.tab[aria-selected="true"] { border-color: var(--gold); background: linear-gradient(160deg, rgba(255,122,61,.22), rgba(183,140,255,.14)); }
+.tab[aria-selected="true"] svg { color: var(--gold); }
+.panel { animation: rise .5s ease both; }
+.panel[hidden] { display: none; }
+@keyframes rise { from { transform: translateY(18px); } to { transform: none; } }
+.panel-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
+.panel-head h3 { font-size: clamp(28px, 4vw, 46px); }
+.stack { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+
+/* About */
+.team { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-top: 34px; list-style: none; padding: 0; }
+.member { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 6px; min-width: 0; transition: transform .25s, border-color .25s; }
+.member:hover { transform: translateY(-5px); border-color: var(--gold); }
+.avatar { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font: 800 18px var(--f-display); color: #1b0d05; background: linear-gradient(135deg, var(--gold), var(--ember)); margin-bottom: 8px; }
+.member h3 { font-size: 21px; }
+.college { color: var(--gold); font-size: 15px; margin-bottom: 8px; }
+.contact { display: flex; align-items: center; gap: 8px; font: 400 14px/1.4 var(--f-mono); color: #cdd7f2; min-width: 0; }
+.contact svg { width: 16px; height: 16px; flex: none; color: var(--mute); }
+.contact span { overflow-wrap: anywhere; min-width: 0; flex: 1; }
+.copy { flex: none; background: none; border: 1px solid var(--line); color: var(--mute); border-radius: 8px; padding: 4px 9px; font: 700 11px var(--f-mono); cursor: pointer; }
+.copy:hover { color: var(--ice); border-color: var(--gold); }
+.about-copy p + p { margin-top: 12px; }
+.about-copy { display: flex; flex-direction: column; }
+.team-label { margin-top: 36px; font: 700 13px/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--aur-g); }
+
+footer { border-top: 1px solid var(--line); padding-block: 34px 60px; color: var(--mute); font-size: 14px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+/* Journey rail */
+.rail { position: fixed; z-index: 40; right: max(14px, env(safe-area-inset-right, 0px)); top: 50%; transform: translateY(-50%); height: 240px; width: 22px; display: none; }
+.rail::before { content: ""; position: absolute; left: 10px; top: 4px; bottom: 4px; width: 2px; background: repeating-linear-gradient(to bottom, rgba(160,185,255,.35) 0 4px, transparent 4px 10px); }
+.rail a { position: absolute; left: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--night-2); border: 2px solid rgba(160,185,255,.5); transition: all .3s; }
+.rail a.lit { background: var(--gold); border-color: var(--ember); }
+.rail a span { position: absolute; right: 24px; top: -3px; white-space: nowrap; font: 700 11px var(--f-mono); color: var(--ice); background: var(--panel-solid); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.rail a:hover span, .rail a:focus-visible span { opacity: 1; }
+.rail i { position: absolute; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, var(--gold) 45%, var(--ember)); box-shadow: 0 0 18px var(--ember); pointer-events: none; }
+@media (min-width: 1000px) { .rail { display: block; } }
+
+.reveal { transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+.reveal.pre { transform: translateY(26px); }
+
+@media (max-width: 900px) {
+  .menu-btn { display: block; }
+  nav.main { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--panel-solid); border-bottom: 1px solid var(--line); padding: 10px max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px)); max-height: 75vh; overflow-y: auto; }
+  nav.main.open { display: block; }
+  nav.main ul { flex-direction: column; align-items: stretch; gap: 2px; }
+  nav.main a, nav.main button.sub-btn { width: 100%; text-align: left; border-radius: 10px; padding: 13px 14px; }
+  .sub { position: static; display: flex !important; min-width: 0; box-shadow: none; border: 0; border-left: 2px solid var(--line); border-radius: 0; background: none; margin-left: 14px; padding: 0 0 0 8px; }
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .tabs { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#home" aria-label="The Journey of Comet, home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="bt" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ff7a3d" stop-opacity="0"/><stop offset="1" stop-color="#ffc46b"/></linearGradient></defs><path d="M3 37 C10 26 17 20 25 14 L28 20 C21 24 11 30 3 37Z" fill="url(#bt)"/><circle cx="28" cy="13" r="7" fill="#ffc46b"/><circle cx="26" cy="11" r="2.6" fill="#fff6e0"/></svg>
+      The Journey of Comet
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">MENU</button>
+    <nav class="main" id="mainNav" aria-label="Main">
+      <ul>
+        <li><a href="#home" data-sec="home">Home</a></li>
+        <li><a href="#identity" data-sec="identity">Comet's Identity</a></li>
+        <li><a href="#aurora" data-sec="aurora">Aurora</a></li>
+        <li class="has-sub" data-sec="earthlings">
+          <button class="sub-btn" type="button" aria-haspopup="true" id="earthBtn">The Earthlings</button>
+          <ul class="sub">
+            <li><a href="#astronauts" data-tab="astronauts">Astronauts</a></li>
+            <li><a href="#pilots" data-tab="pilots">Pilots</a></li>
+            <li><a href="#farmers" data-tab="farmers">Farmers</a></li>
+            <li><a href="#power-grid-operators" data-tab="power-grid-operators">Power Grid Operators</a></li>
+            <li><a href="#general-public" data-tab="general-public">General Public</a></li>
+          </ul>
+        </li>
+        <li><a href="#about-us" data-sec="about-us">About Us</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<nav class="rail" id="rail" aria-label="Journey progress">
+  <a href="#home" data-i="0" aria-label="Home"><span>Home</span></a>
+  <a href="#identity" data-i="1" aria-label="Comet's Identity"><span>Comet's Identity</span></a>
+  <a href="#aurora" data-i="2" aria-label="Aurora"><span>Aurora</span></a>
+  <a href="#earthlings" data-i="3" aria-label="The Earthlings"><span>The Earthlings</span></a>
+  <a href="#about-us" data-i="4" aria-label="About Us"><span>About Us</span></a>
+  <i id="railComet" aria-hidden="true"></i>
+</nav>
+
+<main>
+  <section id="home" class="hero">
+    <div class="wrap">
+      <h1>Hello, I'm <em>Comet</em>, a blazing child of the Sun's tempest.</h1>
+      <p class="ask">Are you willing to be a companion of my journey?</p>
+      <a class="go" href="#identity">Let's Go
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <section class="map" id="map" aria-labelledby="mapTitle">
+    <div class="wrap">
+      <h2 id="mapTitle">MAP OF Comet's Journey</h2>
+      <div class="map-card">
+        <svg viewBox="0 0 1000 400" role="img" aria-label="Route map of Comet's journey from Home through Comet's Identity, Aurora and The Earthlings to About Us">
+          <defs>
+            <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffc46b"/><stop offset=".5" stop-color="#52f2b3"/><stop offset="1" stop-color="#b78cff"/></linearGradient>
+            <radialGradient id="sunGlow"><stop offset="0" stop-color="#ffc46b" stop-opacity=".95"/><stop offset=".45" stop-color="#ff7a3d" stop-opacity=".35"/><stop offset="1" stop-color="#ff7a3d" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle id="sunHalo" r="70" fill="url(#sunGlow)"/>
+          <path id="routeBase" class="route-base" d="M70 300 C 210 40, 330 360, 500 190 S 790 40, 930 270"/>
+          <path id="routeLit" class="route-lit" d="M70 300 C 210 40, 330 360, 500 190 S 790 40, 930 270"/>
+          <g id="stops"></g>
+          <g id="mapComet"><circle r="16" fill="#ff7a3d" opacity=".35"/><circle r="9" fill="#ffc46b"/><circle cx="-3" cy="-3" r="3.2" fill="#fff6e0"/></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="identity" class="sec">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">The Journey of Comet</span>
+        <h2>Comet's Identity</h2>
+        <p class="lede"> Coronal Mass Ejections (CME) can cause beautiful aurorae, however can be problematic for electrical systems, satellites, radio and GPS systems. CMEs can be extremely hazardous for astronauts and cause them to receive a large dose of radiation due to them having less protection. Pilots and passengers in aircraft at very high altitudes can also receive small doses. In space, they can cause problems for electronic systems in satellites and disrupt the magnetic field of a planet. However, scientists find them very useful. As they occur, we can learn new information about the relationship between Earth and the Sun, understand space weather and discover just how active our solar system is! </p>
+      </div>
+      <div class="split reveal">
+        <figure class="video" data-name="WhatsApp Video 2025-10-05 at 21.53.37_dd0f271c.mp4" data-orig="https://sites.google.com/view/cometjourney/comets-identity"></figure>
+        <div class="story">
+          <h3>The Naughty Fire Ball</h3>
+          <p>Comet is a cheeky little fireball zooming through space, leaving glittering tails behind! It plays hide-and-seek with the Sun, sometimes sneaking close to show off its glowing tail. Packed with icy secrets from the start of the Solar System, Comet loves surprising everyone with its wild, twirling dance across the sky.</p>
+        </div>
+      </div>
+      <div class="qs reveal">
+        <div class="qs-title">Quick Science</div>
+        <p class="qs-lead">Just like every comet has its own sparkling identity with a glowing tail, the Sun has its own ‘naughty fireball bursts’ called CMEs (Coronal Mass Ejection) — huge waves of energy that zoom across space! While comets show us their tails for fun, CMEs send out invisible UV light and solar radiation, reminding us that even the Sun has a wild personality.</p>
+        <ul class="bits">
+          <li><b>Solar Blast:</b> A CME is like a huge bubble of hot gas and magnetic energy shooting out from the Sun.</li>
+          <li><b>Magnetic Magic:</b> When CMEs hit Earth, they can create auroras—colorful lights in the sky near the poles!</li>
+          <li><b>Skin Alert:</b> Too much solar radiation can sunburn or harm our skin cells.</li>
+          <li><b>Invisible Rays:</b> It carries UV light and solar radiation, which we can’t see but can feel.</li>
+          <li><b>Stay Safe:</b> Scientists track CMEs so people and gadgets can be protected from strong solar storms.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="aurora" class="sec aurora">
+    <canvas id="aurora-canvas" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Above the clouds</span>
+        <h2>Aurora</h2>
+        <p class="lede"> The aurora occurs high in the atmosphere, near the poles. Occasionally, the Sun will release small charged particles. These travel to Earth, and collide with gases in the atmosphere causing light. This creates beautiful green, pink and purple waves in the sky. Sometimes the aurora looks like a curtain, and sometimes like a dragon. Although very beautiful, this is caused by a very powerful and slightly dangerous source, the Sun! </p>
+      </div>
+
+      <div class="split reveal">
+        <figure class="video" data-name="WhatsApp Video 2025-10-05 at 15.40.29_d0983ede.mp4" data-orig="https://sites.google.com/view/cometjourney/aurora"></figure>
+        <div class="story">
+          <h3>Aurora’s Sky Dance</h3>
+          <p>High up in the sky, the Aurora dances like a colorful fairy! When the Sun sends sparkly particles to Earth, they bump into our air and paint the sky with green, pink, and purple lights.</p>
+        </div>
+      </div>
+      <div class="qs reveal">
+        <div class="qs-title">Quick Science</div>
+        <p class="qs-lead">High above the clouds, near the poles, the sky sometimes throws a color party! These glowing waves are called Auroras — when the Sun’s charged particles meet Earth’s atmosphere, they paint the sky with magical lights of green, pink, and purple. It’s science that looks like magic!</p>
+        <ul class="bits">
+          <li><b>Solar Connection:</b> Auroras happen when charged particles from the Sun (from a CME or solar wind) enter Earth’s atmosphere.</li>
+          <li><b>Sky Glow Zone:</b> This light show happens in the ionosphere, a layer full of electrically charged gases.</li>
+          <li><b>Satellite Trouble:</b> Strong solar activity can disturb satellite signals, making GPS or radio systems glitch.</li>
+          <li><b>Pilot &amp; Human Effects:</b> Pilots may see auroras from the cockpit, but high doses of radiation during strong solar storms can be harmful — so scientists keep watch to stay safe!</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="earthlings" class="sec">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Who feels the Sun's pranks</span>
+        <h2>The Earthlings</h2>
+        <p class="lede">People working in different fields view the deeds of Comet in different ways. Starting from astronauts and pilots to general public, the impacts are present everywhere. Let's have a look to what those earthlings think, shall we?</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="The Earthlings" id="tabs">
+        <button class="tab" role="tab" id="tab-astronauts" data-tab="astronauts" aria-controls="panel-astronauts" aria-selected="true" tabindex="0">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3c4 3 6 8 6 13l-3 6h-6l-3-6c0-5 2-10 6-13z"/><circle cx="16" cy="12" r="2.3"/><path d="M10 18l-4 4 1 4 5-3M22 18l4 4-1 4-5-3M14 26c0 2 1 3 2 4 1-1 2-2 2-4"/></svg>
+          Astronauts
+        </button>
+        <button class="tab" role="tab" id="tab-pilots" data-tab="pilots" aria-controls="panel-pilots" aria-selected="false" tabindex="-1">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18l11-3 8-9 3 1-4 9 6 1c1 .3 1 2 0 2.2l-6 1-3 6-3-.5 1.5-6.5L5 21z"/></svg>
+          Pilots
+        </button>
+        <button class="tab" role="tab" id="tab-farmers" data-tab="farmers" aria-controls="panel-farmers" aria-selected="false" tabindex="-1">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 29V13M16 13c-3 0-5-2-5-5 3 0 5 2 5 5zM16 13c3 0 5-2 5-5-3 0-5 2-5 5zM16 20c-3 0-5-2-5-5M16 20c3 0 5-2 5-5M16 6c-2-1-2-3 0-4 2 1 2 3 0 4z"/></svg>
+          Farmers
+        </button>
+        <button class="tab" role="tab" id="tab-power-grid-operators" data-tab="power-grid-operators" aria-controls="panel-power-grid-operators" aria-selected="false" tabindex="-1">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 3L7 18h8l-2 11 12-16h-8z"/></svg>
+          Power Grid Operators
+        </button>
+        <button class="tab" role="tab" id="tab-general-public" data-tab="general-public" aria-controls="panel-general-public" aria-selected="false" tabindex="-1">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="16" r="5.5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M25.2 6.8l-2.8 2.8M9.6 22.4l-2.8 2.8"/></svg>
+          General Public
+        </button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-astronauts" aria-labelledby="tab-astronauts">
+        <div class="panel-head"><h3>Astronauts</h3></div>
+        <p class="lede" style="margin-bottom:26px">Astronauts are working in spacecrafts very high up in the atmosphere. In these spacecrafts, they perform many tasks such as repairing equipment, carrying out experiments and eating floating bubble-like food! Occasionally, solar activity (Solar storms and CMEs) can cause problems. The large amounts of energy cause disruption to signals in space. The GPS, communication and even WiFi may become unreliable. Because of this, astronauts and scientists are always very aware of what is happening with the Sun. Although working in space is very exciting, it is important to be very aware of solar storms.
+</p>
+        <div class="split">
+          <figure class="video" data-name="WhatsApp Video 2025-10-05 at 21.17.56_083f41ed.mp4" data-orig="https://sites.google.com/view/cometjourney/the-earthlings/astronauts"></figure>
+          <div class="story">
+            <h3>Astronauts and the Sun’s Space Pranks!</h3>
+            <p>Astronauts do have a lot of fun in the outer space... They can navigate planets, stars and so much interesting and funny things. They always be in touch with it. But sometimes the sun plays tricks with them. The suns burst solar energy interrupts astronauts GPS movements and confuse them about their paths. But intelligent astronauts find their paths in sneaky ways!</p>
+          </div>
+        </div>
+        <div class="qs">
+          <div class="qs-title">Quick Science</div>
+          <p class="qs-lead">High above Earth, the sky sometimes lights up with dancing colors — green, pink, and purple! These are Auroras, sparkling ribbons caused by the Sun’s particles colliding with our atmosphere. It’s like a magical space party, but it’s also real science that can affect astronauts and technology.</p>
+          <ul class="bits">
+            <li><b>Color Chemistry:</b> Oxygen makes green lights, while nitrogen makes pink and purple ones.</li>
+            <li><b>Pilot &amp; Astronaut Alert:</b> Astronauts and high-flying pilots must be careful because solar radiation can be higher near auroras.</li>
+            <li><b>Protective Measures:</b> Scientists monitor space weather and auroras to keep astronauts, satellites, and communications safe.</li>
+            <li><b>Solar Sparks:</b> Auroras happen when charged particles from the Sun crash into Earth’s atmosphere.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-pilots" aria-labelledby="tab-pilots" hidden>
+        <div class="panel-head"><h3>Pilots</h3></div>
+        <p class="lede" style="margin-bottom:26px">Pilots fly large aircrafts very high in the atmosphere to transport people between cities. They rely on GPS and equipment in order to accurately navigate. If there is solar flare activity or a space storm, the GPS may become unreliable and therefore difficult to navigate. In this situation, pilots will use back-up equipment, maps and navigation by sight. Occasionally, during their flight, they may even be able to see beautiful aurorae! Despite the Sun acting badly, pilots are able to safely return everyone to where they need to be.
+</p>
+        <div class="split">
+          <figure class="video" data-name="WhatsApp Video 2025-10-05 at 21.18.48_d8662c19.mp4" data-orig="https://sites.google.com/view/cometjourney/the-earthlings/pilots"></figure>
+          <div class="story">
+            <h3>Leo’s Flight Through Dancing Lights</h3>
+            <p>High in the fluffy clouds, pilots are brave sky heroes steering big airplanes like metal birds! Sometimes the Sun sends sneaky sparkles that make GPS and radios act silly, but pilots stay calm, use backup tools, and guide everyone safely while the sky glows with dancing rainbow lights.</p>
+          </div>
+        </div>
+        <div class="qs">
+          <div class="qs-title">Quick Science</div>
+          <p class="qs-lead">High above the clouds, the Sun isn’t just bright — it sometimes sends invisible energy bursts that can shake the sky! These solar bursts, called solar flares and geomagnetic storms, can tickle instruments, wiggle signals, and sprinkle extra radiation on pilots and passengers. Science helps us stay safe while flying through these space surprises!</p>
+          <ul class="bits">
+            <li><b>Solar Flares:</b> Bursts of light and energy from the Sun can disturb GPS and radio signals used in airplanes.</li>
+            <li><b>Geomagnetic Storms:</b> When Earth’s magnetic field wobbles, instruments like compasses and autopilot can act funny or confused.</li>
+            <li><b>High-Altitude Radiation:</b> Pilots and passengers at high altitudes get a tiny extra dose of solar radiation, like invisible sparkles from the Sun.</li>
+            <li><b>Aurora Effects:</b> Flying near the poles, colorful auroras show Sun activity and can slightly interfere with instruments.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-farmers" aria-labelledby="tab-farmers" hidden>
+        <div class="panel-head"><h3>Farmers</h3></div>
+        <p class="lede" style="margin-bottom:26px">Farmers grow the food that we eat. They plant seeds, water the crops and constantly care for their fields. Many farmers now use GPS guided tractors and drones in order to speed up their process. However, if there is a solar flare or space storm, the GPS signal can be unstable. This means that tractors could go off course, drones may spin or get lost. The farmer must use a back up system or wait until the Sun has settled. However, regardless of the weather in the sky, farmers will continue to care for their crops. They may just have to change their method. </p>
+        <div class="split">
+          <figure class="video" data-name="WhatsApp Video 2025-10-05 at 21.18.37_e3fc5000.mp4" data-orig="https://sites.google.com/view/cometjourney/the-earthlings/farmers"></figure>
+          <div class="story">
+            <h3>The Dancing Tractors and Dizzy Drones</h3>
+            <p>Out in fields big and small, farmers are the earth superheroes who plant seeds, water crops, and watch plants grow tall! Some have tricky tractors and buzzing drones to help them work faster, but sometimes the Sun sends wiggly space storms that make GPS and machines go silly. Even then, farmers stay clever, use backup tricks, and keep our food growing strong!</p>
+          </div>
+        </div>
+        <div class="qs">
+          <div class="qs-title">Quick Science</div>
+          <p class="qs-lead">The Sun isn’t just bright and warm — sometimes it sends bursts of energy called solar flares and geomagnetic storms that reach Earth! These invisible wiggles in the sky can confuse GPS and satellites, making tractors and drones go a little dizzy. But farmers use clever tricks and backups to keep their fields growing strong, turning science into farm magic!</p>
+          <ul class="bits">
+            <li><b>Geomagnetic Storms:</b> When Earth’s magnetic field shakes, GPS signals can wobble, making machines follow crooked paths.</li>
+            <li><b>Drone Disruptions:</b> Flying drones can spin or lose their way when space weather scrambles their satellite signals.</li>
+            <li><b>Tractor Challenges:</b> GPS-guided tractors may draw squiggly lines instead of straight rows.</li>
+            <li><b>Safety Measures:</b> Farmers can wait for calm conditions or use manual tools and ropes to guide crops safely.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-power-grid-operators" aria-labelledby="tab-power-grid-operators" hidden>
+        <div class="panel-head"><h3>Power Grid Operators</h3></div>
+        <p class="lede" style="margin-bottom:26px">Operators manage the power grid. The power grid is a large system of wires, transformers and machinery. The electricity generated from solar panels, wind farms and power stations is transported through this grid to homes, schools and hospitals. From control rooms filled with screens and graphs, operators manage the grid. Solar flares and CMEs can cause problems in the power grid. The energy from millions of miles away can cause excess current to move through power lines. Transformers can become very hot and solar panels can increase rapidly in output. In order to manage this, operators have back-up circuits, clever switches and cooling systems. At times, they may also transfer the electricity to a different route. Through careful planning and teamwork, the lights stay on despite the Sun acting badly! </p>
+        <div class="split">
+          <figure class="video" data-name="WhatsApp Video 2025-10-05 at 22.00.02_d3f48d0b.mp4" data-orig="https://sites.google.com/view/cometjourney/the-earthlings/power-grid-operators"></figure>
+          <div class="story">
+            <h3>Ollie and the Sun’s Sneaky Sparks</h3>
+            <p>High in the fluffy clouds, pilots are brave sky heroes steering big airplanes like metal birds! Sometimes the Sun sends sneaky sparkles that make GPS and radios act silly, but pilots stay calm, use backup tools, and guide everyone safely while the sky glows with dancing rainbow lights.</p>
+          </div>
+        </div>
+        <div class="qs">
+          <div class="qs-title">Quick Science</div>
+          <p class="qs-lead">Power grid operators are like electricity superheroes, keeping power flowing from solar panels, wind farms, and power plants to homes and schools. Sometimes the Sun sends bursts of energy that make lines wiggle and transformers heat up. Operators use backup circuits and smart switches to keep electricity safe, showing how teamwork and planning beat the Sun’s tricky tricks.</p>
+          <ul class="bits">
+            <li><b>Coronal Mass Ejections (CMEs):</b> Huge eruptions from the Sun’s surface can induce currents in Earth’s wires, making transformers heat up.</li>
+            <li><b>Geomagnetic Storms:</b> Changes in Earth’s magnetic field from the Sun can make power grids act wobbly or surge.</li>
+            <li><b>Transformer Warnings:</b> Transformers can overheat or trip if extra energy sneaks in through power lines.</li>
+            <li><b>Solar Panel Surges:</b> Panels that collect Sun energy can spike unexpectedly, so backup systems are needed.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-general-public" aria-labelledby="tab-general-public" hidden>
+        <div class="panel-head"><h3>General Public</h3></div>
+        <p class="lede" style="margin-bottom:26px">Ultraviolet (UV) light from the Sun is invisible. Riley loves running outside as she enjoys feeling the sun on her nose. Sunlight allows flowers to grow and helps us produce vitamin D in our bodies so we can have strong bones. However, if we are exposed to too much sunlight it can cause our skin to become pink and sore, cause damage to our eyes and cause toys to become hot. As a result, it is important to wear hats, sunglasses, sun cream and to be in some shade. However, by forming simple habits, we can enjoy the sun safely and gain the positive benefits! </p>
+        <div class="split">
+          <figure class="video" data-name="WhatsApp Video 2025-10-05 at 21.18.21_d9eceeec.mp4" data-orig="https://sites.google.com/view/cometjourney/the-earthlings/general-public"></figure>
+          <div class="story">
+            <h3>Riley and the Sun’s Bouncy Rays!</h3>
+            <p>The Sun gives us light, warmth, and energy, but it also sends UV rays that can pinch skin, heat toys, or sneak into eyes. Wearing hats, sunglasses, and sunscreen, and taking breaks in the shade, helps everyone enjoy sunlight safely while still growing strong and happy.</p>
+          </div>
+        </div>
+        <div class="qs">
+          <div class="qs-title">Quick Science</div>
+          <p class="qs-lead">The Sun gives us light, warmth, and invisible rays called UV that help our bodies grow strong and make vitamin D. But too much UV can burn skin, hurt eyes, or heat up toys and gadgets. Quick science teaches us how to enjoy the Sun safely with hats, sunscreen, and shade.</p>
+          <ul class="bits">
+            <li><b>UV Rays:</b> Invisible Sun rays carrying extra energy that can burn skin if too strong.</li>
+            <li><b>Vitamin D:</b> Sunlight helps bodies make vitamin D for strong bones.</li>
+            <li><b>Skin Protection:</b> Sunscreen acts like a magic shield, blocking UV pinches.</li>
+            <li><b>Eye Safety:</b> Sunglasses protect eyes from UV rays like superhero visors.</li>
+            <li><b>Toy Protection:</b> Sunlight can heat up toys or gadgets, so shade helps.</li>
+            <li><b>Short Sun Play:</b> A little sunlight is good and fun, but too long can sting.</li>
+            <li><b>Fun Safety Kit:</b> Hats, shades, and sunscreen let kids play safely while enjoying Sun energy.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about-us" class="sec">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">NASA Space Apps Challenge 2025</span>
+        <h2>About Us</h2>
+      </div>
+      <div class="about-copy lede reveal">
+        <p>We’re a team of three dreamers and doers taking part in the NASA Space Apps Challenge 2025.</p>
+        <p>Curious minds. Creative hearts. One shared goal — to make space science meaningful for everyone.</p>
+        <p>Fueled by curiosity and teamwork, we aim to turn complex ideas into creative solutions that connect space with everyday life.</p>
+        <p>Together, we believe innovation begins with imagination — and ours is limitless when it comes to exploring the wonders beyond Earth.</p>
+      </div>
+      <div class="team-label">Our Team:</div>
+      <ul class="team reveal">
+        <li class="member">
+          <div class="avatar" aria-hidden="true">AD</div>
+          <h3>Adrito Das</h3>
+          <div class="college">Notre Dame College</div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Phone"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg><span>01534-538327</span><button class="copy" type="button" data-copy="01534-538327">Copy</button></div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Email"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>dasjhumma@gmail.com</span><button class="copy" type="button" data-copy="dasjhumma@gmail.com">Copy</button></div>
+        </li>
+        <li class="member">
+          <div class="avatar" aria-hidden="true">MM</div>
+          <h3>Muhtasim Munsif</h3>
+          <div class="college">Notre Dame College</div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Phone"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg><span>01734-046577</span><button class="copy" type="button" data-copy="01734-046577">Copy</button></div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Email"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>munsifmuhtasim@gmail.com</span><button class="copy" type="button" data-copy="munsifmuhtasim@gmail.com">Copy</button></div>
+        </li>
+        <li class="member">
+          <div class="avatar" aria-hidden="true">SC</div>
+          <h3>Snehashish Chowdhury</h3>
+          <div class="college">Notre Dame College</div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Phone"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg><span>01972-606593</span><button class="copy" type="button" data-copy="01972-606593">Copy</button></div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Email"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>snehashishchowy456@gmail.com</span><button class="copy" type="button" data-copy="snehashishchowy456@gmail.com">Copy</button></div>
+        </li>
+        <li class="member">
+          <div class="avatar" aria-hidden="true">JZ</div>
+          <h3>Jaheen Ariyan Zaara</h3>
+          <div class="college">Holy Cross College</div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Phone"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg><span>01906-965185</span><button class="copy" type="button" data-copy="01906-965185">Copy</button></div>
+          <div class="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Email"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>jaheenzara5619@gmail.com</span><button class="copy" type="button" data-copy="jaheenzara5619@gmail.com">Copy</button></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>The Journey of Comet</span>
+    <span>NASA Space Apps Challenge 2025</span>
+    <a href="https://sites.google.com/view/cometjourney" target="_blank" rel="noopener">Original site</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Video sources ----------
+     Each line maps a video slot (left) to the file in the "videos" folder next to this page (right).
+     Keep the left side as it is. Change only the file path on the right if you rename a video. */
+  var VIDEO_SOURCES = {
+    "WhatsApp Video 2025-10-05 at 21.53.37_dd0f271c.mp4": "videos/identity.mp4",
+    "WhatsApp Video 2025-10-05 at 15.40.29_d0983ede.mp4": "videos/aurora.mp4",
+    "WhatsApp Video 2025-10-05 at 21.17.56_083f41ed.mp4": "videos/astronauts.mp4",
+    "WhatsApp Video 2025-10-05 at 21.18.48_d8662c19.mp4": "videos/pilots.mp4",
+    "WhatsApp Video 2025-10-05 at 21.18.37_e3fc5000.mp4": "videos/farmers.mp4",
+    "WhatsApp Video 2025-10-05 at 22.00.02_d3f48d0b.mp4": "videos/grid.mp4",
+    "WhatsApp Video 2025-10-05 at 21.18.21_d9eceeec.mp4": "videos/public.mp4"
+  };
+
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---------- Video slots ---------- */
+  var PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
+  $$('.video').forEach(function (fig) {
+    var name = fig.dataset.name, orig = fig.dataset.orig, src = VIDEO_SOURCES[name] || '';
+    var frame = document.createElement('div');
+    frame.className = 'vframe';
+    fig.appendChild(frame);
+    function showPlaceholder() {
+      frame.innerHTML = '<div><div class="vplay">' + PLAY + '</div><p class="vname"></p><p class="vmsg"></p></div>';
+      $('.vname', frame).textContent = name;
+    }
+    function playUrl(url, isLocal) {
+      frame.innerHTML = '';
+      var v = document.createElement('video');
+      v.controls = true; v.preload = 'metadata'; v.playsInline = true; v.src = url;
+      v.addEventListener('error', function () {
+        showPlaceholder();
+        $('.vmsg', frame).textContent = isLocal ? 'This file could not be played here. Try an .mp4 file.' : 'The video file was not found.';
+      });
+      frame.appendChild(v);
+    }
+    showPlaceholder();
+    if (src) playUrl(src, false);
+    var tools = document.createElement('div');
+    tools.className = 'vtools';
+    var a = document.createElement('a');
+    a.className = 'vbtn'; a.href = orig; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = 'Watch on the original page';
+    var lab = document.createElement('label');
+    lab.className = 'vbtn';
+    lab.appendChild(document.createTextNode('Play a file from your device'));
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'video/*';
+    inp.addEventListener('change', function () {
+      var f = inp.files && inp.files[0];
+      if (!f) return;
+      playUrl(URL.createObjectURL(f), true);
+    });
+    lab.appendChild(inp);
+    tools.appendChild(a); tools.appendChild(lab);
+    if (!src) fig.appendChild(tools);
+  });
+
+  /* ---------- Tabs (Earthlings) ---------- */
+  var tabNames = ['astronauts', 'pilots', 'farmers', 'power-grid-operators', 'general-public'];
+  var tabEls = $$('.tab');
+  function activate(name, focus) {
+    if (tabNames.indexOf(name) < 0) return;
+    tabEls.forEach(function (t) {
+      var on = t.dataset.tab === name;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus({ preventScroll: true });
+    });
+    $$('[role="tabpanel"]').forEach(function (p) { p.hidden = p.id !== 'panel-' + name; });
+  }
+  tabEls.forEach(function (t, i) {
+    t.addEventListener('click', function () { activate(t.dataset.tab); try { history.replaceState(null, '', '#' + t.dataset.tab); } catch (e) {} });
+    t.addEventListener('keydown', function (e) {
+      var n = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (i + 1) % tabEls.length;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (i - 1 + tabEls.length) % tabEls.length;
+      if (e.key === 'Home') n = 0;
+      if (e.key === 'End') n = tabEls.length - 1;
+      if (n !== null) { e.preventDefault(); activate(tabEls[n].dataset.tab, true); }
+    });
+  });
+  function goTab(name) {
+    activate(name);
+    var tabs = $('#tabs');
+    if (tabs) tabs.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+  $$('a[data-tab]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { history.replaceState(null, '', '#' + a.dataset.tab); } catch (err) {}
+      goTab(a.dataset.tab);
+      closeMenu();
+    });
+  });
+  function route() {
+    var h = (location.hash || '').replace('#', '');
+    if (tabNames.indexOf(h) >= 0) setTimeout(function () { goTab(h); }, 60);
+  }
+  window.addEventListener('hashchange', route);
+  route();
+
+  /* ---------- Menu ---------- */
+  var menuBtn = $('#menuBtn'), mainNav = $('#mainNav');
+  function closeMenu() { mainNav.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); }
+  menuBtn.addEventListener('click', function () {
+    var open = mainNav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  $$('nav.main a[data-sec]').forEach(function (a) { a.addEventListener('click', closeMenu); });
+  var hasSub = $('.has-sub');
+  $('#earthBtn').addEventListener('click', function () { hasSub.classList.toggle('open'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { hasSub.classList.remove('open'); closeMenu(); } });
+
+  /* ---------- Copy buttons ---------- */
+  $$('.copy').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.dataset.copy, span = b.previousElementSibling;
+      function done() { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1400); }
+      function fallback() {
+        try {
+          var r = document.createRange(); r.selectNodeContents(span);
+          var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+          b.textContent = 'Selected'; setTimeout(function () { b.textContent = 'Copy'; }, 1400);
+        } catch (e) {}
+      }
+      try {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } catch (e) { fallback(); }
+    });
+  });
+
+  /* ---------- Reveal on scroll (always visible, only a small lift) ---------- */
+  var revealEls = $$('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top > innerHeight) { el.classList.add('pre'); io.observe(el); }
+    });
+  }
+
+  /* ---------- Journey map, rail and scroll progress ---------- */
+  var secIds = ['home', 'identity', 'aurora', 'earthlings', 'about-us'];
+  var stopNames = ["Home", "Comet's Identity", "Aurora", "The Earthlings", "About Us"];
+  var secEls = secIds.map(function (id) { return document.getElementById(id); });
+  var route_ = $('#routeBase'), lit = $('#routeLit'), total = route_.getTotalLength();
+  var stopsG = $('#stops'), NS = 'http://www.w3.org/2000/svg', stopEls = [], pts = [];
+  stopNames.forEach(function (n, i) {
+    var p = route_.getPointAtLength(total * i / 4);
+    pts.push(p);
+    var g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'stop'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'link'); g.setAttribute('aria-label', n);
+    var c = document.createElementNS(NS, 'circle'); c.setAttribute('class', 'dot'); c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', 15);
+    var t = document.createElementNS(NS, 'text');
+    var above = i % 2 === 0;
+    t.setAttribute('x', Math.max(110, Math.min(890, p.x))); t.setAttribute('y', p.y + (above ? -30 : 50)); t.setAttribute('text-anchor', 'middle');
+    t.textContent = n;
+    g.appendChild(c); g.appendChild(t); stopsG.appendChild(g); stopEls.push(g);
+    function go() { var el = secEls[i]; if (el) el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); }
+    g.addEventListener('click', go);
+    g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  var sun = $('#sunHalo'); sun.setAttribute('cx', pts[0].x); sun.setAttribute('cy', pts[0].y);
+  var mapComet = $('#mapComet'), rail = $('#rail'), railComet = $('#railComet'), railDots = $$('a', rail);
+  var RAIL_H = 240;
+  railDots.forEach(function (d, i) { d.style.top = (4 + (RAIL_H - 8) * i / 4 - 7) + 'px'; });
+  lit.style.strokeDasharray = total; lit.style.strokeDashoffset = total;
+
+  function progress() {
+    var y = scrollY + innerHeight * 0.35;
+    var tops = secEls.map(function (s) { return s.getBoundingClientRect().top + scrollY; });
+    var i = 0;
+    for (var k = 0; k < tops.length; k++) if (y >= tops[k]) i = k;
+    var t;
+    if (i >= tops.length - 1) t = 1;
+    else t = (i + Math.max(0, Math.min(1, (y - tops[i]) / (tops[i + 1] - tops[i])))) / (tops.length - 1);
+    return { t: Math.max(0, Math.min(1, t)), i: i };
+  }
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var p = progress();
+    var pt = route_.getPointAtLength(total * p.t);
+    mapComet.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ')');
+    lit.style.strokeDashoffset = total * (1 - p.t);
+    stopEls.forEach(function (g, i) { g.classList.toggle('lit', i <= p.i); });
+    railDots.forEach(function (d, i) { d.classList.toggle('lit', i <= p.i); });
+    railComet.style.top = (4 + (RAIL_H - 8) * p.t - 8) + 'px';
+    $$('nav.main a[data-sec]').forEach(function (a) { a.classList.toggle('active', a.dataset.sec === secIds[p.i]); });
+    hasSub.classList.toggle('active', secIds[p.i] === 'earthlings');
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+
+  /* ---------- Sky canvas: stars, nebula, a comet that follows the pointer ---------- */
+  var sky = $('#sky'), sx = sky.getContext('2d');
+  var W = 0, H = 0, dpr = 1, stars = [], trail = [];
+  var head = { x: 0, y: 0 }, pointer = { x: 0, y: 0, at: -9999 }, shoot = null, nextShoot = 4000;
+  function sizeSky() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    sky.width = W * dpr; sky.height = H * dpr;
+    sx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.min(260, Math.round(W * H / 6500));
+    stars = [];
+    for (var i = 0; i < n; i++) stars.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.3 + 0.25, tw: Math.random() * 6.28, sp: Math.random() * 0.002 + 0.0006, z: Math.random() * 0.5 + 0.05 });
+    if (!head.x) { head.x = W * 0.7; head.y = H * 0.3; }
+  }
+  window.addEventListener('pointermove', function (e) { pointer.x = e.clientX; pointer.y = e.clientY; pointer.at = performance.now(); }, { passive: true });
+  function paintSky(t) {
+    sx.clearRect(0, 0, W, H);
+    var g = sx.createRadialGradient(W * 0.15, H * 0.1, 0, W * 0.15, H * 0.1, Math.max(W, H) * 0.7);
+    g.addColorStop(0, 'rgba(90,70,200,0.22)'); g.addColorStop(1, 'rgba(90,70,200,0)');
+    sx.fillStyle = g; sx.fillRect(0, 0, W, H);
+    g = sx.createRadialGradient(W * 0.9, H * 0.85, 0, W * 0.9, H * 0.85, Math.max(W, H) * 0.6);
+    g.addColorStop(0, 'rgba(255,110,60,0.13)'); g.addColorStop(1, 'rgba(255,110,60,0)');
+    sx.fillStyle = g; sx.fillRect(0, 0, W, H);
+    var sy = window.scrollY;
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var y = ((s.y - sy * s.z) % H + H) % H;
+      var a = 0.45 + 0.55 * Math.sin(s.tw + t * s.sp);
+      sx.globalAlpha = Math.max(0.1, a);
+      sx.fillStyle = s.r > 1.1 ? '#ffe9c4' : '#dfe8ff';
+      sx.beginPath(); sx.arc(s.x, y, s.r, 0, 6.283); sx.fill();
+    }
+    sx.globalAlpha = 1;
+  }
+  function frame(t) {
+    paintSky(t);
+    var following = t - pointer.at < 2600;
+    var tx = following ? pointer.x : W * (0.5 + 0.4 * Math.sin(t * 0.00027));
+    var ty = following ? pointer.y : H * (0.32 + 0.26 * Math.sin(t * 0.00041 + 1));
+    head.x += (tx - head.x) * 0.07; head.y += (ty - head.y) * 0.07;
+    trail.unshift({ x: head.x, y: head.y });
+    if (trail.length > 50) trail.pop();
+    for (var i = trail.length - 1; i >= 0; i--) {
+      var k = 1 - i / trail.length;
+      var jx = (Math.random() - 0.5) * (1 - k) * 7, jy = (Math.random() - 0.5) * (1 - k) * 7;
+      sx.fillStyle = 'rgba(255,' + Math.round(110 + 110 * k) + ',' + Math.round(60 + 40 * k) + ',' + (k * 0.5).toFixed(3) + ')';
+      sx.beginPath(); sx.arc(trail[i].x + jx, trail[i].y + jy, 1 + k * 6, 0, 6.283); sx.fill();
+    }
+    var hg = sx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 34);
+    hg.addColorStop(0, 'rgba(255,246,224,1)'); hg.addColorStop(0.22, 'rgba(255,196,107,.9)'); hg.addColorStop(1, 'rgba(255,122,61,0)');
+    sx.fillStyle = hg; sx.beginPath(); sx.arc(head.x, head.y, 34, 0, 6.283); sx.fill();
+    if (!shoot && t > nextShoot) { shoot = { x: Math.random() * W * 0.8 + W * 0.2, y: -10, vx: -7, vy: 4, life: 0 }; }
+    if (shoot) {
+      shoot.x += shoot.vx; shoot.y += shoot.vy; shoot.life++;
+      var lg = sx.createLinearGradient(shoot.x, shoot.y, shoot.x - shoot.vx * 14, shoot.y - shoot.vy * 14);
+      lg.addColorStop(0, 'rgba(255,255,255,.9)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+      sx.strokeStyle = lg; sx.lineWidth = 2; sx.beginPath(); sx.moveTo(shoot.x, shoot.y); sx.lineTo(shoot.x - shoot.vx * 14, shoot.y - shoot.vy * 14); sx.stroke();
+      if (shoot.x < -50 || shoot.y > H + 50) { shoot = null; nextShoot = t + 6000 + Math.random() * 7000; }
+    }
+    if (!document.hidden) requestAnimationFrame(frame);
+  }
+  sizeSky();
+  window.addEventListener('resize', sizeSky);
+  if (reduceMotion) { paintSky(0); window.addEventListener('scroll', function () { paintSky(0); }, { passive: true }); }
+  else requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && !reduceMotion) requestAnimationFrame(frame); });
+
+  /* ---------- Aurora ribbons ---------- */
+  var ac = $('#aurora-canvas'), ax = ac.getContext('2d'), aw = 0, ah = 0, aVisible = false;
+  var bands = [
+    { c: '82,242,179', y: 0.30, a: 46, f: 0.0042, s: 0.00042, h: 0.55, o: 0 },
+    { c: '183,140,255', y: 0.38, a: 58, f: 0.0031, s: -0.00033, h: 0.5, o: 2 },
+    { c: '255,128,213', y: 0.46, a: 38, f: 0.0053, s: 0.00051, h: 0.42, o: 4 }
+  ];
+  function sizeAurora() { var r = ac.parentElement.getBoundingClientRect(); aw = ac.width = Math.max(1, r.width); ah = ac.height = Math.max(1, r.height); }
+  function drawAurora(t) {
+    ax.clearRect(0, 0, aw, ah);
+    ax.globalCompositeOperation = 'lighter';
+    bands.forEach(function (b) {
+      var base = ah * b.y;
+      var g = ax.createLinearGradient(0, base - b.a * 2, 0, base + ah * b.h);
+      g.addColorStop(0, 'rgba(' + b.c + ',0)'); g.addColorStop(0.25, 'rgba(' + b.c + ',0.34)'); g.addColorStop(1, 'rgba(' + b.c + ',0)');
+      ax.fillStyle = g; ax.beginPath();
+      var x, y;
+      for (x = 0; x <= aw + 8; x += 8) {
+        y = base + Math.sin(x * b.f + t * b.s * 3 + b.o) * b.a + Math.sin(x * b.f * 2.3 - t * b.s * 2) * b.a * 0.45;
+        if (x === 0) ax.moveTo(x, y); else ax.lineTo(x, y);
+      }
+      for (x = aw + 8; x >= 0; x -= 8) {
+        y = base + ah * b.h * (0.7 + 0.3 * Math.sin(x * 0.006 + t * 0.0004 + b.o)) + Math.sin(x * b.f - t * b.s * 2) * b.a * 0.6;
+        ax.lineTo(x, y);
+      }
+      ax.closePath(); ax.fill();
+    });
+    ax.globalCompositeOperation = 'source-over';
+  }
+  function aloop(t) { if (aVisible && !document.hidden) { drawAurora(t); requestAnimationFrame(aloop); } }
+  sizeAurora(); drawAurora(0);
+  window.addEventListener('resize', function () { sizeAurora(); drawAurora(0); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      var v = es[0].isIntersecting;
+      if (v && !aVisible && !reduceMotion) { aVisible = true; requestAnimationFrame(aloop); }
+      aVisible = v && !reduceMotion;
+    }).observe(ac.parentElement);
+  }
+})();
+</script>
